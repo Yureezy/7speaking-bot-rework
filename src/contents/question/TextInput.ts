@@ -19,9 +19,9 @@ export class TextInput extends QuestionInterface<string> {
     }
 
     async getBadAnswer(): Promise<string> {
-        return await this.getGoodAnswer().then(
-            (answer) => answer.split('').sort(() => 0.5 - Math.random()).join('')
-        )
+        const goodAnswer = await this.getGoodAnswer()
+        const randomized = goodAnswer.toLowerCase().split('').sort(() => 0.5 - Math.random()).join('');
+        return randomized.charAt(0).toUpperCase() + randomized.slice(1)
     }
 
     async executeAnswer(answer: string): Promise<void> {
