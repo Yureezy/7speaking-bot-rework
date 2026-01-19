@@ -19,7 +19,7 @@ export default function Stats(){
 
 
     return(
-        <div className="m-2 bg-bg-2 rounded-xl p-2 w-4/5">
+        <div className="m-1 bg-bg-2 rounded-xl p-2 w-4/5">
            <div>
                <ElemRow label="Question completed 📝 ">
                    <p>{nbQuestionDone}</p>

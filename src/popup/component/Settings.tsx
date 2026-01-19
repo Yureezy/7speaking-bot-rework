@@ -45,7 +45,7 @@ export default function Settings() {
     }, []);
 
     return (
-        <div className="m-2 bg-bg-2 rounded-xl p-2 w-4/5">
+        <div className="m-1 bg-bg-2 rounded-xl p-2 w-4/5">
             <ElemRow label={"Error Probability : "} labelAfter={"%"}>
                 <input type={"number"} className="border-text-2 border p-0.5 rounded w-14" value={errorProbability}
                        onChange={updateErrorProbability} min="0" max="100" step=".1"/>

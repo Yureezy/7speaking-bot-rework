@@ -12,6 +12,8 @@ export default function IndexPopup() {
     const [active, setActive] = useState(false);
     const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
 
+    const version = chrome.runtime.getManifest().version
+
 
     const updateActive = () => {
         setActive(!active);
@@ -34,19 +36,21 @@ export default function IndexPopup() {
                 </h1>
             </header>
             {isUpdateAvailable && <UpdateWarning/>}
-            <button className="w-20 h-20 shadow p-4 rounded-full bg-bg-2 text-primary m-4 " onClick={updateActive}>
+            <button className="w-20 h-20 shadow p-4 rounded-full bg-bg-2 text-primary m-2 " onClick={updateActive}>
                 {active ? <FaRegCirclePause className="w-full h-full"/> : <FaRegCirclePlay className="w-full h-full"/>}
             </button>
             <Settings/>
             <Stats/>
-            <footer className="bg-bg-2 p-2 m-0 rounded flex  w-full rounded-t-2xl  items-center justify-center gap-1">
-                <p className="text-nowrap">made by orkeilius </p>
-                <p className="text-text-2 text-2xl">·</p>
-                <iframe
-                    className="inline-block align-middle"
-                    src="https://ghbtns.com/github-btn.html?user=orkeilius&repo=7speaking-bot-rework&type=star&count=true&size=small"
-                    width="80" height="20" title="GitHub"></iframe>
-
+            <footer className="bg-bg-2 p-2 mt-1 pb-0 rounded rounded-t-2xl flex flex-col items-center w-full">
+                <p>version {version}</p>
+                <div className="flex items-center justify-center mb-0">
+                    <p className="text-nowrap">made by orkeilius </p>
+                    <p className="text-text-2 text-2xl">·</p>
+                    <iframe
+                        className="inline-block align-middle mb-0"
+                        src="https://ghbtns.com/github-btn.html?user=orkeilius&repo=7speaking-bot-rework&type=star&count=true&size=small"
+                        width="80" height="20" title="GitHub"></iframe>
+                </div>
             </footer>
         </div>
     )
