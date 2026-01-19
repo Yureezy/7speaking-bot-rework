@@ -1,6 +1,7 @@
 import type {PlasmoCSConfig, PlasmoGetStyle} from "plasmo";
 import styleText from "data-text:~style.css";
 import {FaRegCirclePlay, FaRegCirclePause, FaEyeSlash} from "react-icons/fa6";
+import { BsFastForwardCircle } from "react-icons/bs";
 import {useEffect, useState} from "react";
 import {StorageKeys, storageService} from "~contents/services/StorageService";
 
@@ -41,6 +42,11 @@ const Overlay = () => {
         setVisible(!visible);
     }
 
+    const isTimerActive = active && text.includes("⏱️")
+    const skipTimer = async () => {
+        await storageService.set(StorageKeys.TIMER_END,0)
+    }
+
     if (!visible) {
         return null;
     }
@@ -53,6 +59,9 @@ const Overlay = () => {
                 <FaRegCirclePause className="text-secondary mr-1" onClick={toggleActive}/>
              :
                 <FaRegCirclePlay className="text-primary mr-1" onClick={toggleActive}/>
+            }
+            {isTimerActive &&
+                <BsFastForwardCircle className="text-primary mx-1" onClick={skipTimer}/>
             }
 
             <span className="overlay-text">{text}</span>
