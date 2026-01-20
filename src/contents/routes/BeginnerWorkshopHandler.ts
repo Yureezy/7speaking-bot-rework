@@ -41,7 +41,7 @@ export class BeginnerWorkshopHandler implements RouteHandlerInterface {
         console.log("Handling beginner quiz...")
         const quiz = document.querySelector(".beginners_topic__content > .MuiCardContent-root")
         if(quiz == null){
-            console.warn("Quiz not found")
+            logMessage("❓ Quiz not found")
             return
         }
 

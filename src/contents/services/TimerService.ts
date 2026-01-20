@@ -39,7 +39,6 @@ class TimeUtils {
     async findRealTime(){
         const rawTime = document.querySelector('.durationCounter p.MuiTypography-body1')?.textContent
         if(rawTime != null && /^\d+(?:sec|min|h)$/.test(rawTime)){
-            console.log(new RegExp(/\w*$/).exec(rawTime)[0])
             const value = Number.parseInt(rawTime)
             switch (new RegExp(/[a-z]*$/).exec(rawTime)[0]) {
                 case "sec" :

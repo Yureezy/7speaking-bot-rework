@@ -8,7 +8,7 @@ class UpdateService{
         try {
             this.isUpdateAvailable == null && await this.checkUpdateAvailable();
         }catch (e){
-            console.log(e)
+            console.error(e)
             setTimeout(this.getUpdateAvailable, 1000 * 60 * 5) // retry in 5 minutes
         }
         return this.isUpdateAvailable
