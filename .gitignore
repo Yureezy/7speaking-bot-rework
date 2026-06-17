@@ -37,3 +37,10 @@ extension-env.d.ts
 #custom
 .idea
 *.pem
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
