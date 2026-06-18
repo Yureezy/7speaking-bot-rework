@@ -1,0 +1,24 @@
+name: ci
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    env:
+      website_test_username: ${{ secrets.WEBSITE_TEST_USERNAME }}
+      website_test_password: ${{ secrets.WEBSITE_TEST_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Install dependencies
+      run: npm install -g yarn && yarn
+    - name: Install Playwright Browser
+      run: yarn playwright install
+    - name: Run tests
+      run: npm run test
