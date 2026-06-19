@@ -1,12 +1,11 @@
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
 import path from 'path';
+import fs from 'fs';
 export const test = base.extend<{
     context: BrowserContext;
     extensionId: string;
 }>({
     context: async ({}, use) => {
-        // The extension build is located at the repository root `build/chrome-mv3-dev`.
-        // __dirname is the `tests` directory, so go up one level.
         const pathToExtension = path.join(__dirname, '..', 'build', 'chrome-mv3-dev');
         const authFile = path.join(__dirname, '../playwright/.auth/user.json');
         console.log(pathToExtension)
@@ -16,10 +15,30 @@ export const test = base.extend<{
                 `--disable-extensions-except=${pathToExtension}`,
                 `--load-extension=${pathToExtension}`,
             ],
-            storageState: authFile,
         });
+        const storageState = JSON.parse(fs.readFileSync(authFile, 'utf8'));
+        if (storageState.cookies) {
+            await context.addCookies(storageState.cookies);
+        }
+        if (storageState.origins) {
+            for (const { origin, localStorage } of storageState.origins) {
+                const page = await context.newPage();
+                await page.goto(origin);
+                await page.evaluate((items) => {
+                    for (const { name, value } of items) {
+                        window.localStorage.setItem(name, value);
+                    }
+                }, localStorage || []);
+                await page.close();
+            }
+        }
         await use(context);
         await context.close();
+    },
+    page: async ({ context }, use) => {
+        const page = await context.newPage();
+        await use(page);
+        await page.close();
     },
     extensionId: async ({ context }, use) => {
         let [serviceWorker] = context.serviceWorkers();

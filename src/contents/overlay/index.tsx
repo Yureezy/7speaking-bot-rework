@@ -56,9 +56,9 @@ const Overlay = () => {
 
             <FaEyeSlash className="text-text-2 mr-2 border-2 border-text-2 rounded-full" onClick={toggleVisible}/>
             {active ?
-                <FaRegCirclePause className="text-secondary mr-1" onClick={toggleActive}/>
+                <FaRegCirclePause className="text-secondary mr-1" alt="pause bot" onClick={toggleActive}/>
              :
-                <FaRegCirclePlay className="text-primary mr-1" onClick={toggleActive}/>
+                <FaRegCirclePlay className="text-primary mr-1" alt="start bot" onClick={toggleActive}/>
             }
             {isTimerActive &&
                 <BsFastForwardCircle className="text-primary mx-1" onClick={skipTimer}/>
