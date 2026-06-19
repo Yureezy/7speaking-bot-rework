@@ -1,0 +1,63 @@
+name: cd
+on:
+  create:
+    tags:
+      - '*'
+
+jobs:
+  build_chrome:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - name: Install dependencies
+        run: npm install -g yarn && yarn
+
+      - name: Build Chrome Extension ${{ github.ref_name }}
+        run: yarn plasmo build --target=chrome-mv3 --zip
+
+      - name: Create key.pem ${{ github.ref_name }}
+        env:
+          CRX_KEY: ${{ secrets.CRX_KEY }}
+        run: echo "$CRX_KEY" > key.pem
+
+      - name: Package Chrome Extension ${{ github.ref_name }}
+        run: >
+          yarn crx3
+          --keyPath key.pem
+          --zipPath "./release/7speaking-bot-rework_chrome-${{ github.ref_name }}.zip"
+          --crxPath "./release/7speaking-bot-rework_chrome-${{ github.ref_name }}.crx"
+          --xmlPath "./release/chrome_update.xml"
+          --crxUrl "https://github.com/orkeilius/7speaking-bot-rework/releases/download/${{ github.ref_name }}/7speaking-bot-rework_chromium-${{ github.ref_name }}.crx"
+          "./build/chrome-mv3-prod/manifest.json"
+
+      - name: Upload Chrome Extension ${{ github.ref_name }} zip
+        uses: actions/upload-artifact@v4
+        with:
+          path: "./release/7speaking-bot-rework_chrome-${{ github.ref_name }}.zip"
+          name: 7speaking-bot-rework_chrome-${{ github.ref_name }}.zip
+      - name: Upload Chrome Extension ${{ github.ref_name }} crx
+        uses: actions/upload-artifact@v4
+        with:
+          path: "./release/7speaking-bot-rework_chrome-${{ github.ref_name }}.crx"
+          name: 7speaking-bot-rework_chrome-${{ github.ref_name }}.crx
+
+  build_firefox:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - name: Install dependencies
+        run: npm install -g yarn && yarn
+
+      - name: Build Firefox Extension ${{ github.ref_name }}
+        run: yarn plasmo build --target=firefox-mv3 --zip
+
+      - name: Rename to xpi
+        run: mv ./build/firefox-mv3-prod.zip ./build/firefox-mv3-prod.xpi
+
+      - name: Upload Firefox unsigned Extension ${{ github.ref_name }} xpi
+        uses: actions/upload-artifact@v4
+        with:
+          path: "./build/firefox-mv3-prod.xpi"
+          name: 7speaking-bot-rework_firefox-${{ github.ref_name }}-unsigned.xpi
