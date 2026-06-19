@@ -51,13 +51,36 @@ jobs:
         run: npm install -g yarn && yarn
 
       - name: Build Firefox Extension ${{ github.ref_name }}
-        run: yarn plasmo build --target=firefox-mv3 --zip
+        run: yarn plasmo build --target=firefox-mv3
 
-      - name: Rename to xpi
-        run: mv ./build/firefox-mv3-prod.zip ./build/firefox-mv3-prod.xpi
 
-      - name: Upload Firefox unsigned Extension ${{ github.ref_name }} xpi
+      - name: Upload Firefox unsigned Extension ${{ github.ref_name }}
         uses: actions/upload-artifact@v4
         with:
-          path: "./build/firefox-mv3-prod.xpi"
-          name: 7speaking-bot-rework_firefox-${{ github.ref_name }}-unsigned.xpi
+          path: "./build/firefox-mv3-prod"
+          name: 7speaking-bot-rework_firefox-${{ github.ref_name }}-unsigned
+
+  sign_firefox:
+    runs-on: ubuntu-latest
+    needs: build_firefox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - name: Install dependencies
+        run: npm install -g yarn && yarn
+
+      - name: Download Firefox unsigned Extension ${{ github.ref_name }}
+        uses: actions/download-artifact@v4
+        with:
+          name: 7speaking-bot-rework_firefox-${{ github.ref_name }}-unsigned
+
+      - name: Sign Firefox Extension ${{ github.ref_name }} xpi
+        env:
+          FIREFOX_API_KEY: ${{ secrets.FIREFOX_API_KEY }}
+          FIREFOX_API_SECRET: ${{ secrets.FIREFOX_API_SECRET }}
+        run: >
+          cd build/firefox-mv3-prod &&
+          yarn web-ext sign
+          --api-key $FIREFOX_API_KEY
+          --api-secret $FIREFOX_API_SECRET
+          --channel unlisted
