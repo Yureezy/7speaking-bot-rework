@@ -9,7 +9,6 @@ export const test = base.extend<{
     context: async ({}, use) => {
         const pathToExtension = path.join(__dirname, '..', 'build', 'chrome-mv3-dev');
         const authFile = path.join(__dirname, '../playwright/.auth/user.json');
-        console.log(pathToExtension)
         const context = await chromium.launchPersistentContext('', {
             channel: 'chromium',
             args: [
