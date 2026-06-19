@@ -20,9 +20,9 @@ export class MultipleResponse extends QuestionInterface<string> {
     async getBadAnswer(): Promise<string> {
         const answer = await this.getGoodAnswer();
         const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>(".answer-container > button"))
+        const randomIndex = Math.floor(Math.random() * (buttons.length - 1));
         return buttons.map(btn => btn.children.item(0).innerHTML.trim())
-            .filter(text => text !== answer.trim())
-            [Math.floor(Math.random() * (buttons.length - 1))];
+            .filter(text => text !== answer.trim())[randomIndex];
     }
 
     async executeAnswer(answer: string): Promise<void> {

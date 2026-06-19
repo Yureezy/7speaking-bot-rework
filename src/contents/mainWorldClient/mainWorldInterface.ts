@@ -4,7 +4,7 @@ export default abstract class MainWorldInterface<T, R> {
     protected abstract clientFunction(arg: T): R;
 
     initClientSide() {
-        globalThis.addEventListener(`${this.name}_REQUEST`, (event: any) => {
+        globalThis.addEventListener(`${this.name}_REQUEST`, (event: Event) => {
             const arg = event.detail;
             const result = this.clientFunction(arg);
             globalThis.dispatchEvent(new CustomEvent(`${this.name}_RESPONSE`, {
@@ -16,7 +16,7 @@ export default abstract class MainWorldInterface<T, R> {
 
     callFunction(arg: T): Promise<R> {
         return new Promise<R>((resolve) => {
-            const handleResponse = (event: any) => {
+            const handleResponse = (event: Event) => {
                 globalThis.removeEventListener(`${this.name}_RESPONSE`, handleResponse);
                 resolve(event.detail);
             };
@@ -35,7 +35,7 @@ export default abstract class MainWorldInterface<T, R> {
         const keys = Object.keys(e);
         for (const key of keys) {
             if (key.startsWith("__reactFiber$")) {
-                return (e as any)[key];
+                return e[key];
             }
         }
         return null;

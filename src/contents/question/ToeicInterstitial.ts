@@ -20,7 +20,7 @@ export class ToeicInterstitial extends QuestionInterface<void> {
         // Not a quizz
     }
 
-    async executeAnswer(answer: void): Promise<void> {
+    async executeAnswer(_answer: void): Promise<void> {
         // Not a quizz
     }
 

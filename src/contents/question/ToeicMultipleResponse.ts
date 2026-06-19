@@ -24,8 +24,9 @@ export class ToeicMultipleResponse extends QuestionInterface<string> {
     async getBadAnswer(): Promise<string> {
         const answer = await this.getGoodAnswer();
         const buttons = this.getButtons();
-        return buttons.filter(btn => !btn.label.includes(answer))
-            [Math.floor(Math.random() * (buttons.length - 1))].label;
+        const randomIndex = Math.floor(Math.random() * (buttons.length - 1));
+        return buttons.filter(btn => !btn.label
+            .includes(answer))[randomIndex].label;
     }
 
     async executeAnswer(answer: string): Promise<void> {

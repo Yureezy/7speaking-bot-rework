@@ -11,7 +11,7 @@ export const config: PlasmoCSConfig = {
     all_frames: true
 }
 
-const functions : MainWorldInterface<any,any>[] = [
+const functions : MainWorldInterface[] = [
     new ExecuteDragAndDrop(),
     new GetAnswer(),
     new GetAnswerDragAndDrop(),

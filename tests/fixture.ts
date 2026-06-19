@@ -5,6 +5,7 @@ export const test = base.extend<{
     context: BrowserContext;
     extensionId: string;
 }>({
+    // eslint-disable-next-line no-empty-pattern
     context: async ({}, use) => {
         const pathToExtension = path.join(__dirname, '..', 'build', 'chrome-mv3-dev');
         const authFile = path.join(__dirname, '../playwright/.auth/user.json');

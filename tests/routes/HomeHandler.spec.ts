@@ -1,6 +1,6 @@
 import { test, expect } from '../fixture';
 
-test('given on home page when bot on : move to page', async ({ context, page }) => {
+test('given on home page when bot on : move to page', async ({ page }) => {
     await page.goto('https://user.7speaking.com/home');
 
     await page.waitForSelector("div[data-testid^=personal-program-item]");

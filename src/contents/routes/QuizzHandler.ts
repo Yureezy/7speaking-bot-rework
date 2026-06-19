@@ -11,7 +11,7 @@ import {logMessage} from "~contents/utils/Logging";
 
 export class QuizzHandler implements RouteHandlerInterface {
 
-    static readonly listQuestion: QuestionInterface<any>[] = [
+    static readonly listQuestion: QuestionInterface[] = [
         new TextInput(),
         new MultipleResponse(),
         new DragAndDrop(),
@@ -23,8 +23,8 @@ export class QuizzHandler implements RouteHandlerInterface {
     readonly routeRegex = /^\/quiz/;
 
     isDetected(): boolean {
-        let quizDetected = (QuizzHandler.listQuestion.some(elem => elem.isDetected()))
-        let pathDetected = this.routeRegex.test(globalThis.location.pathname);
+        const quizDetected = (QuizzHandler.listQuestion.some(elem => elem.isDetected()))
+        const pathDetected = this.routeRegex.test(globalThis.location.pathname);
         return quizDetected || pathDetected;
     }
 

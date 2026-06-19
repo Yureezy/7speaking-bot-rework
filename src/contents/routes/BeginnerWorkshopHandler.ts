@@ -45,7 +45,7 @@ export class BeginnerWorkshopHandler implements RouteHandlerInterface {
             return
         }
 
-        let question = quiz.querySelectorAll(".beginners_lesson__element7Question")
+        const question = quiz.querySelectorAll(".beginners_lesson__element7Question")
         console.log(question)
         question.forEach(this.clickAny)
     }

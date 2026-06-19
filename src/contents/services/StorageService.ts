@@ -45,7 +45,7 @@ class StorageService {
 
 }
 
-export class StorageKeys {
+export class StorageKeys<T> {
     public static readonly ACTIVE = new StorageKeys("active", false)
     public static readonly LOG = new StorageKeys("log", "⏱️ waiting...");
     public static readonly TIMER_URL = new StorageKeys("timerUrl", "");
@@ -78,7 +78,11 @@ export class StorageKeys {
     public static readonly LAST_LESSON_WAITED = new StorageKeys("lastLessonWaited", "");
 
 
-    private constructor(public readonly key: string, public readonly defaultValue: any,public readonly customSetter : ()=>any = null) {
+    private constructor(
+        public readonly key: string,
+        public readonly defaultValue: T,
+        public readonly customSetter : ()=>T = null
+    ) {
     }
 
 }

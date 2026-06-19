@@ -5,8 +5,8 @@ const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
 setup('authenticate', async ({ page }) => {
 
-    var username = process.env.website_test_username;
-    var password = process.env.website_test_password;
+    const username = process.env.website_test_username;
+    const password = process.env.website_test_password;
 
     // Perform authentication steps. Replace these actions with your own.
     await page.goto('https://user.7speaking.com/login');

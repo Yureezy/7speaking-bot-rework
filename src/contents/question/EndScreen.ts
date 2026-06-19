@@ -20,7 +20,7 @@ export class EndScreen extends QuestionInterface<void> {
     async getBadAnswer(): Promise<void> {
         // Not a quizz
     }
-    async executeAnswer(answer: void): Promise<void> {
+    async executeAnswer(_: void): Promise<void> {
         // Not a quizz
     }
 

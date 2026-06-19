@@ -13,7 +13,7 @@ class TimeUtils {
             return false
         }
 
-        let timerEnd = await storageService.get<number>(StorageKeys.TIMER_END)
+        const timerEnd = await storageService.get<number>(StorageKeys.TIMER_END)
         if(timerEnd > Date.now()){
             logMessage(`⏱️ waiting (time left ${Math.floor((timerEnd - Date.now()) / 60000)}mins ${Math.floor(((timerEnd - Date.now()) % 60000) / 1000)}s)`)
             return false

@@ -14,7 +14,7 @@ export default class ExecuteDragAndDrop extends MainWorldInterface<DragAndDropAn
             }
 
             // Trouver l'instance React et le callback onDragEnd
-            let reactInstance = this.getReactElement(dragElem);
+            const reactInstance = this.getReactElement(dragElem);
             let onDragEndCallback = null;
 
             let current = reactInstance;
