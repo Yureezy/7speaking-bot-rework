@@ -51,6 +51,11 @@ jobs:
         with:
           path: "./release/7speaking-bot-rework_chrome-${{ inputs.version }}.crx"
           name: 7speaking-bot-rework_chrome-${{ inputs.version }}.crx
+      - name: Upload Chrome metadata ${{ inputs.version }}
+        uses: actions/upload-artifact@v4
+        with:
+          path: "./release/chrome_update.xml"
+          name: chrome_update_${{ inputs.version }}
 
   build_firefox:
     runs-on: ubuntu-latest
@@ -117,3 +122,44 @@ jobs:
         with:
           path: ./7speaking-bot-rework_firefox-${{ inputs.version }}.xpi
           name: 7speaking-bot-rework_firefox-${{ inputs.version }}.xpi
+
+  update-repo:
+    runs-on: ubuntu-latest
+    needs:
+      - build_chrome
+      - sign_firefox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+
+      - name: Install dependencies
+        run: npm install -g yarn && yarn
+
+      - name: Download chrome metadata
+        uses: actions/download-artifact@v4
+        with:
+          name: chrome_update_${{ inputs.version }}
+          path: "./release/chrome_update.xml.tmp"
+
+      - name: update package to version ${{ inputs.version }}
+        run: |
+          VERSION="${{ inputs.version }}"
+          jq --arg version "$VERSION" '.version = $version' package.json > package.json.tmp
+          mv package.json.tmp package.json
+          mv ./release/chrome_update.xml.tmp ./release/chrome_update.xml 
+
+      - name: Update firefox_update.json ${{ inputs.version }}
+        run: |
+          VERSION="${{ inputs.version }}"
+          FIREFOX_ID="7speaking-bot-rework@github.com"
+          UPDATE_LINK="https://github.com/orkeilius/7speaking-bot-rework/releases/download/${{ inputs.version }}/7speaking-bot-rework_firefox-${{ inputs.version }}.xpi"
+          jq --arg version "$VERSION" \
+             --arg firefox_id "$FIREFOX_ID" \
+             --arg update_link "$UPDATE_LINK" \
+             '.addons[$firefox_id].updates += [{"version": $version, "update_link": $update_link}]' \
+             release/firefox_update.json > release/firefox_update.json.tmp
+          mv release/firefox_update.json.tmp release/firefox_update.json
+
+      - name: Commit update
+        uses: EndBug/add-and-commit@v10
+
