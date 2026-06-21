@@ -162,4 +162,7 @@ jobs:
 
       - name: Commit update
         uses: EndBug/add-and-commit@v10
+        with:
+          message: "chore: release version ${{ inputs.version }} "
+          tag: ${{ inputs.version }}
 
