@@ -38,7 +38,7 @@ jobs:
           --zipPath "./release/7speaking-bot-rework_chrome-${{ inputs.version }}.zip"
           --crxPath "./release/7speaking-bot-rework_chrome-${{ inputs.version }}.crx"
           --xmlPath "./release/chrome_update.xml"
-          --crxUrl "https://github.com/orkeilius/7speaking-bot-rework/releases/download/${{ inputs.version }}/7speaking-bot-rework_chromium-${{ inputs.version }}.crx"
+          --crxURL "https://github.com/orkeilius/7speaking-bot-rework/releases/download/${{ inputs.version }}/7speaking-bot-rework_chromium-${{ inputs.version }}.crx"
           "./build/chrome-mv3-prod/manifest.json"
 
       - name: Upload Chrome Extension ${{ inputs.version }} zip
