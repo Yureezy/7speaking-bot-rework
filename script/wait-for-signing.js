@@ -1,9 +1,5 @@
 import { MozillaAddonsAPI } from "@plasmohq/mozilla-addons-api";
 
-
-
-
-
 const mozilla = new MozillaAddonsAPI({
   extId: process.env.FIREFOX_ID,
   apiKey: process.env.FIREFOX_API_KEY,
@@ -22,7 +18,7 @@ while (true) {
       }
     }
   ).then((res) => res.json())
-  console.log(upload_info)
+  console.debug(upload_info)
   if (upload_info?.files[0].signed) {
     console.log("Signed upload success")
     break
