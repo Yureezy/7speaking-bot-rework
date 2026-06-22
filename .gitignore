@@ -22,10 +22,6 @@ build
 .env.production.local
 keys.json
 
-# lock files
-yarn.lock
-package-lock.json
-
 # debug files
 npm-debug.log*
 yarn-debug.log*
@@ -44,3 +40,4 @@ extension-env.d.ts
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+.har

@@ -33,6 +33,8 @@ export const test = base.extend<{
                 await page.close();
             }
         }
+        context.routeFromHAR(".har/har",{update: true,updateContent:"attach",updateMode:"full"})
+        context.route("**/*.{png,jpg,jpeg,mp4,woff2,}", route => route.abort())
         await use(context);
         await context.close();
     },
