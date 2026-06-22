@@ -1,4 +1,3 @@
-import {execSync} from "node:child_process";
 import {MozillaAddonsAPI} from "@plasmohq/mozilla-addons-api";
 import * as fs from "node:fs";
 import * as https from "node:https";
@@ -24,12 +23,6 @@ class FirefoxBuilder {
             apiSecret: process.env.FIREFOX_API_SECRET,
             channel: "unlisted"
         });
-    }
-
-    async buildWithPlasmo() {
-        console.log("  - plasmo build");
-        await execSync("npm exec -- plasmo build --target=firefox-mv3 --zip");
-        fs.rename(this.zipPath,this.xpiPath,console.error)
     }
 
     async submitToMozilla() {
@@ -106,7 +99,6 @@ class FirefoxBuilder {
     async build() {
         console.log(`Building Firefox version: ${this.tag}`);
 
-        await this.buildWithPlasmo();
         await this.submitToMozilla();
         await this.downloadFromMozilla();
         this.updateFirefoxUpdateJson();
@@ -117,4 +109,5 @@ export default async function buildFirefox(tag) {
     const builder = new FirefoxBuilder(tag);
     await builder.build();
 }
+
 

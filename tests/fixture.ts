@@ -1,6 +1,7 @@
-import { test as base, chromium, type BrowserContext } from '@playwright/test';
-import path from 'path';
-import fs from 'fs';
+import fs from 'node:fs';
+import path from 'node:path';
+import { test as base, chromium, type BrowserContext } from "@playwright/test";
+
 export const test = base.extend<{
     context: BrowserContext;
     extensionId: string;
@@ -26,7 +27,7 @@ export const test = base.extend<{
                 await page.goto(origin);
                 await page.evaluate((items) => {
                     for (const { name, value } of items) {
-                        window.localStorage.setItem(name, value);
+                      globalThis.localStorage.setItem(name, value)
                     }
                 }, localStorage || []);
                 await page.close();
