@@ -27,6 +27,10 @@ jobs:
     steps:
     - uses: actions/checkout@v7.0.0
     - uses: actions/setup-node@v4
+    - uses: actions/cache@v5
+      with:
+        path: .har
+        key: "har-cache"
     - uses: borales/actions-yarn@3766bb1335b98fb13c60eaf358fe20811b730a88 #v5
       with:
         cmd:
