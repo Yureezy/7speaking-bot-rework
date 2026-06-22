@@ -7,6 +7,9 @@ on:
         required: true
 env:
   version: ${{ inputs.version }}
+permissions:
+    contents: read
+
 jobs:
   build_chrome:
     runs-on: ubuntu-latest
