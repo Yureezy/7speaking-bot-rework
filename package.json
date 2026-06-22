@@ -55,10 +55,10 @@
     "browser_specific_settings": {
       "gecko": {
         "id": "7speaking-bot-rework@github.com",
-        "update_url": "https://raw.githubusercontent.com/orkeilius/7speaking-bot-rework/refs/heads/master/release/firefox_update.json"
+        "update_url": "https://raw.githubusercontent.com/orkeilius/7speaking-bot-rework/refs/heads/main/release/firefox_update.json"
       }
     },
-    "update_url": "https://raw.githubusercontent.com/orkeilius/7speaking-bot-rework/refs/heads/master/release/chrome_update.xml"
+    "update_url": "https://raw.githubusercontent.com/orkeilius/7speaking-bot-rework/refs/heads/main/release/chrome_update.xml"
   },
   "resolutions": {
     "content-security-policy-parser": ">=0.6.0",
