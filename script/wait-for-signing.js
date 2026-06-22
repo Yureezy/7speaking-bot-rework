@@ -7,9 +7,9 @@ const mozilla = new MozillaAddonsAPI({
   channel: "unlisted"
 })
 
-const jwt = await mozilla.getAccessToken()
-
 while (true) {
+  const jwt = await mozilla.getAccessToken()
+
   let upload_info = await fetch(
     `https://addons.mozilla.org/api/v4/addons/${process.env.FIREFOX_ID}/versions/${process.env.FIREFOX_TAG}/`,
     {
