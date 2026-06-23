@@ -55,7 +55,7 @@ class Bot {
             return
         }
         if (!active) {
-            logMessage(await updateService.getUpdateAvailable() ? "🔁 Update available":"🧠 ready to learn !")
+            logMessage(updateService.getUpdateAvailable() ? "🔁 Update available":"🧠 ready to learn !")
             return
         }
         await storageService.update(StorageKeys.STAT_TIME_USE)

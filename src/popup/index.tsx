@@ -10,7 +10,7 @@ import UpdateWarning from "~popup/component/UpdateWarning";
 export default function IndexPopup() {
 
     const [active, setActive] = useState(false);
-    const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
+    const [isUpdateAvailable, _] = useState(updateService.getUpdateAvailable());
 
     const version = chrome.runtime.getManifest().version
 
@@ -23,7 +23,6 @@ export default function IndexPopup() {
 
     useEffect(() => {
         storageService.subscribe<boolean>(StorageKeys.ACTIVE,setActive)
-        updateService.getUpdateAvailable().then(setIsUpdateAvailable);
     },[]);
 
     return (
