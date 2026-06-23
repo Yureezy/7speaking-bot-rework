@@ -12,8 +12,8 @@ class UpdateService {
         return this.isUpdateAvailable;
     }
 
-    async fetchUpdate() {
-        await this.checkUpdateAvailable().catch(e => {
+    fetchUpdate() {
+        this.checkUpdateAvailable().catch(e => {
                 console.log(e)
                 setTimeout(()=> this.fetchUpdate(), 1000 * 30) // retry in 5 minutes
             }

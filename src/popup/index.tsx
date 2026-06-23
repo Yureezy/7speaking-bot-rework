@@ -10,8 +10,6 @@ import UpdateWarning from "~popup/component/UpdateWarning";
 export default function IndexPopup() {
 
     const [active, setActive] = useState(false);
-    const [isUpdateAvailable, _] = useState(updateService.getUpdateAvailable());
-
     const version = chrome.runtime.getManifest().version
 
 
@@ -34,7 +32,7 @@ export default function IndexPopup() {
                     Bot Rework (beta)
                 </h1>
             </header>
-            {isUpdateAvailable && <UpdateWarning/>}
+            {updateService.getUpdateAvailable() && <UpdateWarning/>}
             <button className="w-20 h-20 shadow p-4 rounded-full bg-bg-2 text-primary m-2 " onClick={updateActive}>
                 {active ? <FaRegCirclePause className="w-full h-full"/> : <FaRegCirclePlay className="w-full h-full"/>}
             </button>
