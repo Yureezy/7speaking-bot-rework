@@ -1,0 +1,209 @@
+import {mockStorageInstance} from '../../helpers/mockStorage';
+import {HomeHandler} from '~contents/routes/HomeHandler';
+import {BeginnerWorkshopHandler} from '~contents/routes/BeginnerWorkshopHandler';
+import {LearningHandler} from '~contents/routes/LearningHandler';
+import {QuizzHandler} from '~contents/routes/QuizzHandler';
+import {StorageKeys} from '~contents/services/StorageService';
+import {timeService} from '~contents/services/TimerService';
+import {logMessage} from '~contents/utils/Logging';
+
+jest.mock('~contents/utils/Logging', () => ({
+    logMessage: jest.fn(),
+}));
+jest.mock('~contents/services/TimerService', () => ({
+    timeService: {
+        isWaitingEnded: jest.fn(),
+    },
+    TimerType: {
+        QUIZ: 0,
+        QUESTION: 1,
+    },
+}));
+
+describe('Route Handlers', () => {
+    beforeEach(() => {
+        mockStorageInstance.clear();
+        jest.clearAllMocks();
+        document.body.innerHTML = '';
+    });
+
+    describe('HomeHandler', () => {
+        test('isDetected checks if location.pathname starts with /home', () => {
+            const handler = new HomeHandler();
+
+            window.history.pushState({}, '', '/home');
+            expect(handler.isDetected()).toBe(true);
+
+            window.history.pushState({}, '', '/quiz');
+            expect(handler.isDetected()).toBe(false);
+        });
+
+        test('handler clicks start button if found', async () => {
+            const parent = document.createElement('div');
+            parent.className = 'learningSection__scrollableList';
+            const child = document.createElement('div');
+            child.className = 'learningSection__scrollableList__content';
+            const btn = document.createElement('button');
+            btn.className = 'MuiButtonBase-root';
+            btn.click = jest.fn();
+
+            child.appendChild(btn);
+            parent.appendChild(child);
+            document.body.appendChild(parent);
+
+            const handler = new HomeHandler();
+            await handler.handler();
+
+            expect(btn.click).toHaveBeenCalled();
+            expect(logMessage).toHaveBeenCalledWith('🧠 Starting lesson...');
+        });
+
+        test('handler logs message if start button is not found', async () => {
+            const handler = new HomeHandler();
+            await handler.handler();
+            expect(logMessage).toHaveBeenCalledWith('🤔 Lesson not found');
+        });
+    });
+
+    describe('BeginnerWorkshopHandler', () => {
+        test('isDetected checks if location.pathname matches /workshop.*beginners-workshop', () => {
+            const handler = new BeginnerWorkshopHandler();
+
+            window.history.pushState({}, '', '/workshop/beginners-workshop');
+            expect(handler.isDetected()).toBe(true);
+
+            window.history.pushState({}, '', '/home');
+            expect(handler.isDetected()).toBe(false);
+        });
+
+        test('handler clicks next button if present', async () => {
+            const btn = document.createElement('button');
+            btn.className = 'next__btn';
+            btn.click = jest.fn();
+            document.body.appendChild(btn);
+
+            const handler = new BeginnerWorkshopHandler();
+            await handler.handler();
+
+            expect(btn.click).toHaveBeenCalled();
+            expect(logMessage).toHaveBeenCalledWith('➡️ Next button found, clicking...');
+        });
+
+        test('handler clicks validate button and fills quiz if present and disabled', async () => {
+            const validateBtn = document.createElement('button');
+            validateBtn.className = 'validate__btn';
+            validateBtn.setAttribute('disabled', 'true');
+            validateBtn.click = jest.fn();
+            document.body.appendChild(validateBtn);
+
+            const quiz = document.createElement('div');
+            quiz.className = 'beginners_topic__content';
+            const card = document.createElement('div');
+            card.className = 'MuiCardContent-root';
+            const q = document.createElement('div');
+            q.className = 'beginners_lesson__element7Question';
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.click = jest.fn();
+
+            q.appendChild(radio);
+            card.appendChild(q);
+            quiz.appendChild(card);
+            document.body.appendChild(quiz);
+
+            const handler = new BeginnerWorkshopHandler();
+            await handler.handler();
+
+            expect(radio.click).toHaveBeenCalled();
+            expect(validateBtn.click).toHaveBeenCalled();
+            expect(logMessage).toHaveBeenCalledWith('✅ Validate button found, clicking...');
+        });
+    });
+
+    describe('LearningHandler', () => {
+        test('isDetected checks if any quiz button exists', () => {
+            const handler = new LearningHandler();
+            expect(handler.isDetected()).toBe(false);
+
+            const btn = document.createElement('button');
+            btn.className = 'sheet__quizButton';
+            document.body.appendChild(btn);
+
+            expect(handler.isDetected()).toBe(true);
+        });
+
+        test('handler redirects back if quiz is already completed', async () => {
+            window.history.pushState({}, '', '/learning/lesson-1');
+            await mockStorageInstance.set(StorageKeys.LAST_QUIZ_COMPLETED.key, 'https://user.7speaking.com/learning/lesson-1');
+
+            const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {
+            });
+
+            const handler = new LearningHandler();
+
+            // JSDOM logs a "Not implemented: navigation" error instead of throwing when location.replace is called.
+            await handler.handler();
+
+            expect(consoleErrorSpy).toHaveBeenCalledWith(expect.objectContaining({
+                message: expect.stringMatching(/Not implemented: navigation/i)
+            }));
+            expect(logMessage).toHaveBeenCalledWith('⁉️ lesson already done going back');
+
+            consoleErrorSpy.mockRestore();
+        });
+
+        test('handler clicks quiz button if waiting ended', async () => {
+            (timeService.isWaitingEnded as jest.Mock).mockResolvedValue(true);
+
+            const btn = document.createElement('button');
+            btn.className = 'sheet__quizButton';
+            btn.click = jest.fn();
+            document.body.appendChild(btn);
+
+            const handler = new LearningHandler();
+            await handler.handler();
+
+            expect(btn.click).toHaveBeenCalled();
+            expect(logMessage).toHaveBeenCalledWith('☝️🤓 quiz time!');
+        });
+    });
+
+    describe('QuizzHandler', () => {
+        test('isDetected returns true if route matches /quiz or question handler is detected', () => {
+            const handler = new QuizzHandler();
+
+            window.history.pushState({}, '', '/quiz');
+            expect(handler.isDetected()).toBe(true);
+
+            window.history.pushState({}, '', '/home');
+            expect(handler.isDetected()).toBe(false);
+        });
+
+        test('handler executes matched question flow when waiting ended', async () => {
+            (timeService.isWaitingEnded as jest.Mock).mockResolvedValue(true);
+
+            const mockQuestion = QuizzHandler.listQuestion[0];
+            const isDetectedSpy = jest.spyOn(mockQuestion, 'isDetected').mockReturnValue(true);
+            const handlerSpy = jest.spyOn(mockQuestion, 'handler').mockResolvedValue(undefined);
+
+            const handler = new QuizzHandler();
+            await handler.handler();
+
+            expect(handlerSpy).toHaveBeenCalled();
+
+            isDetectedSpy.mockRestore();
+            handlerSpy.mockRestore();
+        });
+
+        test('handler logs message if no question type detected', async () => {
+            const handler = new QuizzHandler();
+            const spies = QuizzHandler.listQuestion.map(q => jest.spyOn(q, 'isDetected').mockReturnValue(false));
+
+            await handler.handler();
+
+            expect(logMessage).toHaveBeenCalledWith('❓ Question type not found');
+
+            spies.forEach(s => s.mockRestore());
+        });
+    });
+});
