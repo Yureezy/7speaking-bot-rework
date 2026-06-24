@@ -23,29 +23,26 @@ jobs:
       run: npm run lint
 
   test:
-    timeout-minutes: 60
     runs-on: ubuntu-latest
-    env:
-      website_test_username: ${{ secrets.WEBSITE_TEST_USERNAME }}
-      website_test_password: ${{ secrets.WEBSITE_TEST_PASSWORD }}
     steps:
-    - uses: actions/checkout@v7.0.0
-    - uses: actions/setup-node@v4
-      with:
-        cache: "yarn"
-    - uses: actions/cache@v5
-      with:
-        path: .har
-        key: "har-cache"
-    - uses: borales/actions-yarn@3766bb1335b98fb13c60eaf358fe20811b730a88 #v5
-      with:
-        cmd:
-          install
-
-    - name: Install Playwright Browser
-      run: yarn playwright install chromium
-    - name: Run tests
-      run: npm run test
+      - uses: actions/checkout@v7.0.0
+      - uses: actions/setup-node@v4
+        with:
+          cache: "yarn"
+      - uses: actions/cache@v5
+        with:
+          path: .har
+          key: "har-cache"
+      - uses: borales/actions-yarn@3766bb1335b98fb13c60eaf358fe20811b730a88 #v5
+        with:
+          cmd:
+            install
+      - run: yarn run test --coverage
+      - name: Upload coverage
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          path: "./coverage/lcov.info"
+          name: coverage_info
 
   sonarqube:
     name: SonarQube
@@ -63,6 +60,11 @@ jobs:
       - uses: borales/actions-yarn@3766bb1335b98fb13c60eaf358fe20811b730a88 #v5
         with:
           cmd: install
+      - name: Download coverage
+        uses: actions/download-artifact@v8.0.1
+        with:
+          path: "./coverage/lcov.info"
+          name: coverage_info
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
