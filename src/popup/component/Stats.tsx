@@ -38,7 +38,7 @@ export default function Stats(){
     )
 }
 
-function formatMsToHoursMinutes(ms: number): string {
+export function formatMsToHoursMinutes(ms: number): string {
     if (!ms || ms <= 0) return '0m';
     const totalMinutes = Math.floor(ms / 60000);
     const hours = Math.floor(totalMinutes / 60);
