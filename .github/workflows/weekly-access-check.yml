@@ -5,6 +5,9 @@ on:
     - cron: '0 8 * * 1' # Chaque lundi à 8h UTC
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   test-e2e:
     name: Check 7speaking access
