@@ -2,7 +2,7 @@ name: ci
 on:
   push:
     branches: [ main ]
-  pull_request_target: # every pr is manually approve before running
+  pull_request:
     branches: [ main ]
 permissions:
   contents: read
